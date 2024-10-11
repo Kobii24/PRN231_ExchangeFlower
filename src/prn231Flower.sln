@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prn231Flower.API", "prn231Flower.API\prn231Flower.API.csproj", "{EE604D8C-748E-43AA-811E-059D209B3BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prn231Flower.API", "prn231Flower.API\prn231Flower.API.csproj", "{EE604D8C-748E-43AA-811E-059D209B3BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prn231Flower.Data", "prn231Flower.Data\prn231Flower.Data.csproj", "{DF8771B0-E97E-46EA-93CC-116C8CE11851}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prn231Flower.Repository", "prn231Flower.Repository\prn231Flower.Repository.csproj", "{B7134BF4-8D03-40D3-8C95-0041A4763D3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{EE604D8C-748E-43AA-811E-059D209B3BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE604D8C-748E-43AA-811E-059D209B3BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE604D8C-748E-43AA-811E-059D209B3BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF8771B0-E97E-46EA-93CC-116C8CE11851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF8771B0-E97E-46EA-93CC-116C8CE11851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF8771B0-E97E-46EA-93CC-116C8CE11851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF8771B0-E97E-46EA-93CC-116C8CE11851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7134BF4-8D03-40D3-8C95-0041A4763D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7134BF4-8D03-40D3-8C95-0041A4763D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7134BF4-8D03-40D3-8C95-0041A4763D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7134BF4-8D03-40D3-8C95-0041A4763D3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
