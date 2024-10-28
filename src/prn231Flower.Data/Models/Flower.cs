@@ -13,15 +13,17 @@ public partial class Flower
 
     public string Type { get; set; }
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public int Status { get; set; }
+    public int? Status { get; set; }
 
     public string Description { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
+
+    public string ImgUrl { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

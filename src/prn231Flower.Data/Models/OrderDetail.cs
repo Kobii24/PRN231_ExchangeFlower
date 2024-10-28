@@ -13,11 +13,11 @@ public partial class OrderDetail
 
     public int? FlowerId { get; set; }
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
     public string Description { get; set; }
 
-    public decimal TotalPrice { get; set; }
+    public decimal? TotalPrice { get; set; }
 
     public virtual Flower Flower { get; set; }
 

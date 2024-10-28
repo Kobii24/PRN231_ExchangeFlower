@@ -11,7 +11,7 @@ public partial class Order
 
     public int? UserId { get; set; }
 
-    public int Status { get; set; }
+    public int? Status { get; set; }
 
     public string Note { get; set; }
 
@@ -23,7 +23,7 @@ public partial class Order
 
     public string Address { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

@@ -15,9 +15,9 @@ public partial class Payment
 
     public string Status { get; set; }
 
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
 
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 
     public virtual Order Order { get; set; }
 }

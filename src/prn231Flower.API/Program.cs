@@ -1,53 +1,113 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using prn231Flower.Data.Models;
+using prn231Flower.Repository.Repositories;
+using System.Text;
 
-namespace prn231Flower.API
+namespace prn231Flower.API;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+        builder.Services.AddDbContext<DatabaseContext>();
+        builder.Services.AddControllers();
+
+
+        builder.Services.AddScoped<FlowerRepository>();
+        builder.Services.AddScoped<NotificationRepository>();
+        builder.Services.AddScoped<OrderDetailRepository>();
+        builder.Services.AddScoped<OrderRepository>();
+        builder.Services.AddScoped<PaymentRepository>();
+        builder.Services.AddScoped<UserRepository>();
+        builder.Services.AddScoped<TokenRepository>();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(option =>
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddAuthorization();
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            option.SwaggerDoc("v1", new OpenApiInfo { Title = "Flower Exchanged API", Version = "v1" });
+            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            var summaries = new[]
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
             {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi();
-
-            app.Run();
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
         }
+    });
+        });
+
+        builder.Services.AddCors(opts =>
+        {
+            opts.AddPolicy("CORSPolicy", builder
+                => builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((hosts) => true));
+        });
+
+        builder.Services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            var Key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
+            o.SaveToken = true;
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["JWT:Issuer"],
+                ValidAudience = builder.Configuration["JWT:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Key)
+            };
+        });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Seller", policy => policy.RequireRole("1"));
+            options.AddPolicy("Buyer", policy => policy.RequireRole("2"));
+            options.AddPolicy("Admin", policy => policy.RequireRole("3"));
+            options.AddPolicy("AllRoles", policy =>
+                policy.RequireRole("1", "2", "3"));
+        });
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+        app.UseCors("CORSPolicy");
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
     }
 }
