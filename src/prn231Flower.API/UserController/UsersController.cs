@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using prn231Flower.API.ViewModel;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
@@ -43,11 +42,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterUser(int Id, [FromBody]RegisterRequest request)
+    public async Task<IActionResult> RegisterUser([FromBody]RegisterRequest request)
     {
-        var user = await _user.GetByIdAsync(Id);
-        if (user is not null)
-            return BadRequest("User already exist!");
         var newUser = new User
         {
             Username = request.Username,

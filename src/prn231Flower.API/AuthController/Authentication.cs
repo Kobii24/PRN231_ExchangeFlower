@@ -45,11 +45,11 @@ public class Authentication : ControllerBase
             }
         }
 
-        if (EmailAddress != "admin@gmail.com" && Password != "12345678" && Role != 3)
+        if (EmailAddress != "admin@gmail.com")
         {
             var listplayers = _user.GetAll();
             var tempPlayer = listplayers.Where(p
-                => p.Email == EmailAddress && p.Password == Password && p.Role == Role).SingleOrDefault();
+                => p.Email == EmailAddress && p.Password == Password && p.Role == Role).FirstOrDefault();
             if (tempPlayer != null)
                 return tempPlayer;
         }
