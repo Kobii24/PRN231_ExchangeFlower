@@ -15,8 +15,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddDbContext<DatabaseContext>();
         builder.Services.AddControllers();
+        builder.Services.AddDbContext<DatabaseContext>();
 
         builder.Services.AddScoped<FlowerRepository>();
         builder.Services.AddScoped<NotificationRepository>();
