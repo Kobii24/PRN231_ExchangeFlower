@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace prn231Flower.Data.Models;
 
@@ -29,5 +30,6 @@ public partial class Order
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
+    [JsonIgnore]
     public virtual User User { get; set; }
 }

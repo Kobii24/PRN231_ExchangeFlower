@@ -35,5 +35,22 @@ namespace prn231Flower.API.Controllers
             else
                 return StatusCode(500, "An error occurred while creating the order.");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _orderRepository.GetAllOrdersAsync();
+            return Ok(orders);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            if (order == null)
+                return NotFound($"Order with ID {id} not found.");
+
+            return Ok(order);
+        }
     }
 }

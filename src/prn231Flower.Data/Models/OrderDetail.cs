@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace prn231Flower.Data.Models;
 
@@ -19,7 +20,9 @@ public partial class OrderDetail
 
     public decimal? TotalPrice { get; set; }
 
+    [JsonIgnore]
     public virtual Flower Flower { get; set; }
 
+    [JsonIgnore]
     public virtual Order Order { get; set; }
 }

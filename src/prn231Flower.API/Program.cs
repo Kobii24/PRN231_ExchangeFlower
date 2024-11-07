@@ -18,7 +18,6 @@ public class Program
         builder.Services.AddDbContext<DatabaseContext>();
         builder.Services.AddControllers();
 
-
         builder.Services.AddScoped<FlowerRepository>();
         builder.Services.AddScoped<NotificationRepository>();
         builder.Services.AddScoped<OrderDetailRepository>();

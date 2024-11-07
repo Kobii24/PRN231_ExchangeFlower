@@ -1,4 +1,5 @@
-﻿using prn231Flower.Data.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using prn231Flower.Data.Base;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Interfaces;
 using System;
@@ -22,6 +23,22 @@ namespace prn231Flower.Repository.Repositories
                 _context.OrderDetails.Add(detail);
             }
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            // Include OrderDetails for each order
+            return await _context.Orders
+                                 .Include(o => o.OrderDetails)
+                                 .ToListAsync();
+        }
+
+        public async Task<Order> GetOrderByIdAsync(int id)
+        {
+            // Retrieve a specific order by ID, including its details
+            return await _context.Orders
+                                 .Include(o => o.OrderDetails)
+                                 .FirstOrDefaultAsync(o => o.Id == id);
         }
     }
 }
