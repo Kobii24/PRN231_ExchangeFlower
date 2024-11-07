@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterUser(int Id, [FromBody]RegisterRequest request)
+    public async Task<IActionResult> RegisterUser(int Id, [FromBody] RegisterRequest request)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is not null)
@@ -64,7 +64,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("({Id})")]
-    public async Task<IActionResult> UpdateUser(int Id, [FromBody]RegisterRequest request)
+    public async Task<IActionResult> UpdateUser(int Id, [FromBody] RegisterRequest request)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
@@ -75,7 +75,7 @@ public class UsersController : ControllerBase
         user.Role = request.Role;
         user.Username = request.Username;
         user.Address = request.Address;
-        
+
         _user.Update(user);
         await _user.SaveAsync();
 
