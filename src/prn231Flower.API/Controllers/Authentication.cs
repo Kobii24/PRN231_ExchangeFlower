@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
-namespace prn231Flower.API.AuthController;
+namespace prn231Flower.API.Controllers;
 public record LoginRequest(string Email, string Password, int Role);
 
 [Route("api/[controller]")]
@@ -16,7 +16,7 @@ public class Authentication : ControllerBase
     public Authentication(UserRepository user, TokenRepository token)
     {
         _token = token;
-        _user = user;   
+        _user = user;
     }
 
     [AllowAnonymous]

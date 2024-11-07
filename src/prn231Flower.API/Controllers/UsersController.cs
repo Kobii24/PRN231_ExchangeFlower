@@ -4,7 +4,7 @@ using prn231Flower.API.ViewModel;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
-namespace prn231Flower.API.UserController;
+namespace prn231Flower.API.Controllers;
 public record RegisterRequest(string Username, string Email, string Password,
     int Role, string Phone, string Address);
 
