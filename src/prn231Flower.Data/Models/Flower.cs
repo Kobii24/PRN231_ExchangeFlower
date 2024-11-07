@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace prn231Flower.Data.Models;
 
@@ -25,7 +26,9 @@ public partial class Flower
 
     public string ImgUrl { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
+    [JsonIgnore]
     public virtual User User { get; set; }
 }

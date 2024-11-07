@@ -3,7 +3,7 @@ using prn231Flower.API.ViewModel;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
-namespace prn231Flower.API.UserController;
+namespace prn231Flower.API.Controllers;
 public record RegisterRequest(string Username, string Email, string Password,
     int Role, string Phone, string Address);
 
@@ -60,7 +60,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("({Id})")]
-    public async Task<IActionResult> UpdateUser(int Id, [FromBody]RegisterRequest request)
+    public async Task<IActionResult> UpdateUser(int Id, [FromBody] RegisterRequest request)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
@@ -71,7 +71,7 @@ public class UsersController : ControllerBase
         user.Role = request.Role;
         user.Username = request.Username;
         user.Address = request.Address;
-        
+
         _user.Update(user);
         await _user.SaveAsync();
 

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace prn231Flower.Data.Models;
 
@@ -19,5 +20,6 @@ public partial class Payment
 
     public DateTime? Date { get; set; }
 
+    [JsonIgnore]
     public virtual Order Order { get; set; }
 }

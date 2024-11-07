@@ -2,8 +2,8 @@
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
-namespace prn231Flower.API.FlowerController;
-public record FlowerRequest(int UserId, string Type, int Quantity, 
+namespace prn231Flower.API.Controllers;
+public record FlowerRequest(int UserId, string Type, int Quantity,
     decimal Price, int Status, string Description, string ImgUrl);
 public record UpdateRequest(int UserId, string Type, int Quantity,
     decimal Price, int Status, string Description, string ImgUrl);
@@ -29,13 +29,13 @@ public class FlowersController : ControllerBase
     public async Task<ActionResult<Flower>> GetFlowerById(int Id)
     {
         var flower = await _flower.GetByIdAsync(Id);
-        if(flower is null)
+        if (flower is null)
             return NotFound($"Can not find flower with {Id}");
         return Ok(flower);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFlower([FromBody]FlowerRequest request)
+    public async Task<IActionResult> CreateFlower([FromBody] FlowerRequest request)
     {
         var flower = new Flower
         {
@@ -53,8 +53,8 @@ public class FlowersController : ControllerBase
         return Ok(flower);
     }
 
-    [HttpPut(("{Id}"))]
-    public async Task<IActionResult> UpdateFlower(int Id, [FromBody]UpdateRequest request)
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> UpdateFlower(int Id, [FromBody] UpdateRequest request)
     {
         var flower = await _flower.GetByIdAsync(Id);
         if (flower is null)
@@ -72,7 +72,7 @@ public class FlowersController : ControllerBase
         return Ok("IsSuccess");
     }
 
-    [HttpDelete(("{Id}"))]
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteFlower(int Id)
     {
         var flower = await _flower.GetByIdAsync(Id);

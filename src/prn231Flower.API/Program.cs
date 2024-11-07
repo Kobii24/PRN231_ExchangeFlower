@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using prn231Flower.Data.Models;
+using prn231Flower.Repository.Interfaces;
 using prn231Flower.Repository.Repositories;
 using System.Text;
 
@@ -17,11 +18,10 @@ public class Program
         builder.Services.AddDbContext<DatabaseContext>();
         builder.Services.AddControllers();
 
-
         builder.Services.AddScoped<FlowerRepository>();
         builder.Services.AddScoped<NotificationRepository>();
         builder.Services.AddScoped<OrderDetailRepository>();
-        builder.Services.AddScoped<OrderRepository>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<PaymentRepository>();
         builder.Services.AddScoped<UserRepository>();
         builder.Services.AddScoped<TokenRepository>();
