@@ -4,7 +4,7 @@ using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
 namespace prn231Flower.API.Controllers;
-public record LoginRequest(string Email, string Password, int Role);
+public record LoginRequest(string Email, string Password);
 
 [Route("api/[controller]")]
 [ApiController]
