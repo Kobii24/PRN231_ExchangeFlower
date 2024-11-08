@@ -23,7 +23,7 @@ public class Authentication : ControllerBase
     [HttpPost("login")]
     public IActionResult Login(LoginRequest account)
     {
-        var user = AuthenticateUser(account.Email, account.Password, account.Role);
+        var user = AuthenticateUser(account.Email, account.Password);
         if (user != null)
         {
             var tokenString = _token.GenerateToken(user);
@@ -33,14 +33,14 @@ public class Authentication : ControllerBase
         return Unauthorized("You are not allowed to access this function!");
     }
 
-    private User AuthenticateUser(string EmailAddress, string Password, int Role)
+    private User AuthenticateUser(string EmailAddress, string Password)
     {
-        if (EmailAddress == "admin@gmail.com" && Password == "12345678" && Role == 3)
+        if (EmailAddress == "admin@gmail.com" && Password == "12345678")
         {
             var players = _user.GetAll();
             foreach (var player in players)
             {
-                if (player.Email == "admin@gmail.com" && player.Password == "12345678" && Role == 3)
+                if (player.Email == "admin@gmail.com" && player.Password == "12345678")
                     return player;
             }
         }
@@ -49,7 +49,7 @@ public class Authentication : ControllerBase
         {
             var listplayers = _user.GetAll();
             var tempPlayer = listplayers.Where(p
-                => p.Email == EmailAddress && p.Password == Password && p.Role == Role).FirstOrDefault();
+                => p.Email == EmailAddress && p.Password == Password).FirstOrDefault();
             if (tempPlayer != null)
                 return tempPlayer;
         }
