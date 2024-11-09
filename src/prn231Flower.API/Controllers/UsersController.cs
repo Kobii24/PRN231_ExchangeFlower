@@ -67,7 +67,7 @@ public class UsersController : ControllerBase
             return BadRequest($"Can not find User with {Id} to update!");
         user.Email = request.Email;
         user.Phone = request.Phone;
-        user.Password = request.Password;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
         user.Role = request.Role;
         user.Username = request.Username;
         user.Address = request.Address;

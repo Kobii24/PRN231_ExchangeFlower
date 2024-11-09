@@ -35,12 +35,12 @@ public class Authentication : ControllerBase
 
     private User AuthenticateUser(string EmailAddress, string Password)
     {
-        if (EmailAddress == "admin@gmail.com" && Password == "12345678")
+        if (EmailAddress == "admin@gmail.com" && Password == BCrypt.Net.BCrypt.HashPassword("12345678"))
         {
             var players = _user.GetAll();
             foreach (var player in players)
             {
-                if (player.Email == "admin@gmail.com" && player.Password == "12345678")
+                if (player.Email == "admin@gmail.com" && player.Password == BCrypt.Net.BCrypt.HashPassword("12345678"))
                     return player;
             }
         }
