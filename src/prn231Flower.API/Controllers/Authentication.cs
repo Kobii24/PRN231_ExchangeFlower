@@ -49,7 +49,7 @@ public class Authentication : ControllerBase
         {
             var listplayers = _user.GetAll();
             var tempPlayer = listplayers.Where(p
-                => p.Email == EmailAddress && p.Password == Password).FirstOrDefault();
+                => p.Email == EmailAddress && p.Password == BCrypt.Net.BCrypt.HashPassword(Password)).FirstOrDefault();
             if (tempPlayer != null)
                 return tempPlayer;
         }

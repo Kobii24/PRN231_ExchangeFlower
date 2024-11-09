@@ -31,14 +31,14 @@ public class UsersController : ControllerBase
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
             return NotFound($"Can not find user with {Id}");
-        var vn = new UserVM
+        var vm = new UserVM
         {
             Address = user.Address,
             Email = user.Email,
             Phone = user.Phone,
             Username = user.Username
         };
-        return Ok(vn);
+        return Ok(vm);
     }
 
     [HttpPost("Register")]
@@ -50,7 +50,7 @@ public class UsersController : ControllerBase
             Address = request.Address,
             Email = request.Email,
             Phone = request.Phone,
-            Password = request.Password,
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
             Role = request.Role,
             CreatedAt = DateTime.Now
         };
