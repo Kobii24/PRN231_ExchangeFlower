@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using prn231Flower.API.EmailServices;
+using prn231Flower.API.Helper;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Interfaces;
 using prn231Flower.Repository.Repositories;
@@ -25,6 +27,9 @@ public class Program
         builder.Services.AddScoped<PaymentRepository>();
         builder.Services.AddScoped<UserRepository>();
         builder.Services.AddScoped<TokenRepository>();
+
+        builder.Services.AddTransient<IEmailService, EmailService>();
+        builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(option =>

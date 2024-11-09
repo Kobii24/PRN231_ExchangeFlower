@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using prn231Flower.API.EmailServices;
+using prn231Flower.API.Helper;
 using prn231Flower.API.ViewModel;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
@@ -12,10 +15,15 @@ public record RegisterRequest(string Username, string Email, string Password,
 public class UsersController : ControllerBase
 {
     private readonly UserRepository _user;
+    private readonly IEmailService _emailService;
+    private readonly FlowerRepository _flower;
 
-    public UsersController(UserRepository user)
+    public UsersController(UserRepository user, 
+        IEmailService emailService, FlowerRepository flower)
     {
         _user = user;
+        _emailService = emailService;
+        _flower = flower;
     }
 
     [HttpGet]
@@ -31,13 +39,31 @@ public class UsersController : ControllerBase
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
             return NotFound($"Can not find user with {Id}");
-        var vm = new UserVM
+
+        var flowers = _flower.GetAll();
+        var listFlower = new List<Flower>();
+        foreach(var flower in flowers)
         {
-            Address = user.Address,
-            Email = user.Email,
-            Phone = user.Phone,
-            Username = user.Username
-        };
+            if(flower.UserId == user.Id)
+            {
+                listFlower.Add(flower);
+            }
+        }
+
+        var vm = new UserVM();
+
+        if (listFlower.Count == 0)
+        {
+            return BadRequest("List flower is empty!");
+        }
+        else
+        {
+            vm.Address = user.Address;
+            vm.Username = user.Username;
+            vm.Email = user.Email;
+            vm.Flowers = listFlower;
+        }
+
         return Ok(vm);
     }
 
@@ -54,9 +80,20 @@ public class UsersController : ControllerBase
             Role = request.Role,
             CreatedAt = DateTime.Now
         };
-        _user.Create(newUser);
-        await _user.SaveAsync();
-        return Ok(newUser);
+        await _user.CreateAsync(newUser);
+        try
+        {
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.ToEmail = newUser.Email;
+            mailRequest.Subject = "Welcome to Exchange Flower system " + newUser.Username;
+            mailRequest.Body = "Register successfully! Welcome to Exchange Flower system " + newUser.Username;
+            await _emailService.SendEmailAsync(mailRequest);
+            return Ok("Go to email to confirm!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     [HttpPut("({Id})")]
