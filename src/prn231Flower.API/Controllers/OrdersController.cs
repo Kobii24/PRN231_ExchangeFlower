@@ -52,5 +52,16 @@ namespace prn231Flower.API.Controllers
 
             return Ok(order);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var isDeleted = await _orderRepository.DeleteOrderAsync(id);
+
+            if (!isDeleted)
+                return NotFound($"Order with ID {id} not found.");
+
+            return Ok("Order deleted successfully.");
+        }
     }
 }
