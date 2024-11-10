@@ -40,5 +40,28 @@ namespace prn231Flower.Repository.Repositories
                                  .Include(o => o.OrderDetails)
                                  .FirstOrDefaultAsync(o => o.Id == id);
         }
+
+        public async Task<bool> DeleteOrderAsync(int orderId)
+        {
+            var order = await _context.Orders
+                                       .Include(o => o.OrderDetails)
+                                       .Include(o => o.Payments) // Include Payments
+                                       .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+                return false;
+
+            // Remove related Payments
+            _context.Payments.RemoveRange(order.Payments);
+
+            // Remove related OrderDetails
+            _context.OrderDetails.RemoveRange(order.OrderDetails);
+
+            // Remove the Order
+            _context.Orders.Remove(order);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
