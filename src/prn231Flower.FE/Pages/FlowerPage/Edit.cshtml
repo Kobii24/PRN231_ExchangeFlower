@@ -1,0 +1,70 @@
+﻿@page
+@model prn231Flower.FE.Pages.FlowerPage.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Flower</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Flower.Id" />
+            <div class="form-group">
+                <label asp-for="Flower.UserId" class="control-label"></label>
+                <input asp-for="Flower.UserId" class="form-control" disabled/>
+                <span asp-validation-for="Flower.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.Type" class="control-label"></label>
+                <input asp-for="Flower.Type" class="form-control" />
+                <span asp-validation-for="Flower.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.Quantity" class="control-label"></label>
+                <input asp-for="Flower.Quantity" class="form-control" />
+                <span asp-validation-for="Flower.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.Price" class="control-label"></label>
+                <input asp-for="Flower.Price" class="form-control" />
+                <span asp-validation-for="Flower.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.Status" class="control-label"></label>
+                <input asp-for="Flower.Status" class="form-control" />
+                <span asp-validation-for="Flower.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.Description" class="control-label"></label>
+                <input asp-for="Flower.Description" class="form-control" />
+                <span asp-validation-for="Flower.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.CreatedAt" class="control-label"></label>
+                <input asp-for="Flower.CreatedAt" class="form-control" />
+                <span asp-validation-for="Flower.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flower.ImgUrl" class="control-label"></label>
+                <input asp-for="Flower.ImgUrl" class="form-control" />
+                <span asp-validation-for="Flower.ImgUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

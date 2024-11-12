@@ -65,7 +65,7 @@
                                         <li><a class="dropdown-item" asp-area="" asp-page="/FlowerPage/Index">Flower Management</a></li>
                                     </ul>
                                 </li>
-                            }else if(userRole.Equals("1")){
+                            }if(userRole.Equals("1")){
                                 <li class="nav-item dropdown">
                                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                         Category
@@ -75,7 +75,7 @@
                                     </ul>
                                 </li>
                             }
-                            else
+                            if(userRole.Equals("2"))
                             {
                                 <li class="nav-item dropdown">
                                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">

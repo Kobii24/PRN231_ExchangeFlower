@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NuGet.Common;
 using prn231Flower.Data.Models;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace prn231Flower.FE.Pages.SignUpPage;
 
@@ -45,8 +47,8 @@ public class SignUpModel : PageModel
             Phone = Phone,
             Address = Address
         };
-
         var client = _httpClientFactory.CreateClient();
+
         var response = await client.PostAsJsonAsync("https://localhost:5050/api/Users/Register", signUpPayload);
 
         if (response.IsSuccessStatusCode)

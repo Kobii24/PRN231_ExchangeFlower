@@ -91,6 +91,7 @@ public class Program
             options.AddPolicy("Seller", policy => policy.RequireRole("1"));
             options.AddPolicy("Buyer", policy => policy.RequireRole("2"));
             options.AddPolicy("Admin", policy => policy.RequireRole("3"));
+            options.AddPolicy("AdminAndSeller", policy => policy.RequireRole("1", "3"));
             options.AddPolicy("AllRoles", policy =>
                 policy.RequireRole("1", "2", "3"));
         });

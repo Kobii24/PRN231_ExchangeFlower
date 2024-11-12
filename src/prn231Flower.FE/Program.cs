@@ -1,3 +1,6 @@
+using prn231Flower.Data.Models;
+using prn231Flower.Repository.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +14,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDbContext<DatabaseContext>();
+builder.Services.AddScoped<UserRepository>();
+
 
 var app = builder.Build();
 

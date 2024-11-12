@@ -76,6 +76,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
+    [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterUser([FromBody]RegisterRequest request)
     {
@@ -86,7 +87,7 @@ public class UsersController : ControllerBase
             Email = request.Email,
             Phone = request.Phone,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = 2,
+            Role = 1,
             CreatedAt = DateTime.Now
         };
         await _user.CreateAsync(newUser);

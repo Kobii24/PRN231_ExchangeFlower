@@ -28,7 +28,8 @@ public class TokenRepository
           {
              new Claim(ClaimTypes.Email, user.Email),
              new Claim("password", user.Password),
-             new Claim("role", user.Role.ToString()!)
+             new Claim("role", user.Role.ToString()!),
+             new Claim("Id", user.Id.ToString())
           }),
             Expires = DateTime.UtcNow.AddMinutes(10),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey),
