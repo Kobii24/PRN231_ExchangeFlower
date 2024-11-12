@@ -1,0 +1,49 @@
+﻿@page "/Login"
+@model prn231Flower.FE.Pages.LoginPage.LoginModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Login Page";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <h3>
+        Sign In
+    </h3>
+    @if (Model.ErrorMessage != null)
+    {
+        <div style="color: red;">@Model.ErrorMessage</div>
+    }
+    <form method="post" asp-page="SignIn">
+        <table>
+            <tr>
+                <td>UserEmail</td>
+                <td>
+                    <input asp-for="@Model.Email" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Password
+                </td>
+                <td>
+                    <input type="password" asp-for="@Model.Password" />
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Login" />
+                    <a class="btn btn-secondary" asp-page="/SignUpPage/SignUp">Sign up</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

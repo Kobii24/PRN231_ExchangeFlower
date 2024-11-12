@@ -8,6 +8,9 @@ using prn231Flower.Repository.Repositories;
 
 namespace prn231Flower.API.Controllers;
 public record RegisterRequest(string Username, string Email, string Password,
+    string Phone, string Address);
+
+public record UpdateUserRequest(string Username, string Email, string Password,
     int Role, string Phone, string Address);
 
 [Route("api/[controller]")]
@@ -77,7 +80,7 @@ public class UsersController : ControllerBase
             Email = request.Email,
             Phone = request.Phone,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = request.Role,
+            Role = 2,
             CreatedAt = DateTime.Now
         };
         await _user.CreateAsync(newUser);
@@ -97,7 +100,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("({Id})")]
-    public async Task<IActionResult> UpdateUser(int Id, [FromBody] RegisterRequest request)
+    public async Task<IActionResult> UpdateUser(int Id, [FromBody] UpdateUserRequest request)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)

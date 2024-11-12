@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\prn231Flower.Data\prn231Flower.Data.csproj" />
+    <ProjectReference Include="..\prn231Flower.Repository\prn231Flower.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
