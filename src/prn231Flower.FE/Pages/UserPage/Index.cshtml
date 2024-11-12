@@ -1,0 +1,118 @@
+﻿@page
+@model prn231Flower.FE.Pages.UserPage.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+<p>
+    @using (Html.BeginForm("/Index", "Home", FormMethod.Get))
+    {
+        <b>Search By</b>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.Label("Name: ")
+                @Html.TextBox("searchByUserName", "", htmlAttributes: new { @class = "w-100 form-control" })
+                <br />
+                @Html.Label("Email: ")
+                @Html.TextBox("searchByEmail", "", htmlAttributes: new { @class = "w-100 form-control" })
+            </div>
+        </div>
+        <input class="btn btn-info" type="submit" value="Search" />
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Users.Count == 0)
+        {
+            <tr>
+                <td colspan="5" class="text-danger">No data found</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Role)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+                        <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        
+    </tbody>
+</table>
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item @if (Model.PageNumber == 1) {
+        <text>disabled</text>
+}">
+            <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber - 1)">Previous</a>
+        </li>
+
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i">@i</a>
+            </li>
+        }
+
+        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber + 1)">Next</a>
+
+    </ul>
+</nav>
