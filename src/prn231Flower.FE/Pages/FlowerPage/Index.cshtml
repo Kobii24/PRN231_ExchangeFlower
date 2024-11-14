@@ -1,15 +1,39 @@
 ﻿@page
+@using System.IdentityModel.Tokens.Jwt
 @model prn231Flower.FE.Pages.FlowerPage.IndexModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@{
+    var token = HttpContext.Session.GetString("JWTToken");
+    string userRole = string.Empty;
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+    if (!string.IsNullOrEmpty(token))
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+        if (jwtToken != null)
+        {
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role");
+            if (roleClaim != null)
+            {
+                userRole = roleClaim.Value;
+            }
+        }
+    }
+}
+
+<h1>Flower List</h1>
+
+@if(userRole.Equals("1") || userRole.Equals("3"))
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -73,10 +97,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.User.Email)
             </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+                @if (userRole.Equals("1") || userRole.Equals("3"))
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                }   
         </tr>
 }
     </tbody>
