@@ -75,5 +75,36 @@ namespace prn231Flower.API.Controllers
 
             return Ok(orders);
         }
+
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] int status)
+        {
+            if (status < 0 || status > 4)
+            {
+                return BadRequest("Status must be an integer between 0 and 4.");
+            }
+
+            var isUpdated = await _orderRepository.UpdateOrderStatusAsync(id, status);
+
+            if (!isUpdated)
+            {
+                return NotFound($"Order with ID {id} not found.");
+            }
+
+            return Ok("Order status updated successfully.");
+        }
+
+        [HttpGet("seller/{sellerId}")]
+        public async Task<IActionResult> GetOrdersBySellerId(int sellerId)
+        {
+            var orders = await _orderRepository.GetOrdersBySellerIdAsync(sellerId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound($"No orders found for seller with ID {sellerId}.");
+            }
+
+            return Ok(orders);
+        }
+
     }
 }
