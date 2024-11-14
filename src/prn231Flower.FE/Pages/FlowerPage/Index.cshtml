@@ -99,11 +99,14 @@
             </td>
             <td>
                 @if (userRole.Equals("1") || userRole.Equals("3"))
-                {
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> |
-                }
-                    <a asp-page="/CheckoutPage/Index" asp-route-id="@item.Id">Buy now</a>
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-page="/CheckoutPage/Index" asp-route-id="@item.Id" class="btn btn-primary">Buy now</a>
+                    } 
             </td>       
         </tr>
 }
