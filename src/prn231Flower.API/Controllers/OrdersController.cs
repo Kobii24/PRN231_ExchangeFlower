@@ -21,7 +21,7 @@ namespace prn231Flower.API.Controllers
             _orderRepository = orderRepository;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] Order order)
         {
             if (order == null || order.OrderDetails == null || order.OrderDetails.Count == 0)
@@ -62,6 +62,18 @@ namespace prn231Flower.API.Controllers
                 return NotFound($"Order with ID {id} not found.");
 
             return Ok("Order deleted successfully.");
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetOrdersByUserId(int userId)
+        {
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound($"No orders found for user with ID {userId}.");
+            }
+
+            return Ok(orders);
         }
     }
 }

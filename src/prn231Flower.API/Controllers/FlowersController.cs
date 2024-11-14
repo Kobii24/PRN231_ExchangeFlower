@@ -29,7 +29,7 @@ public class FlowersController : ControllerBase
         return Ok(flowers);
     }
 
-    [HttpGet("({Id})")]
+    [HttpGet("{Id}")]
     public async Task<ActionResult<Flower>> GetFlowerById(int Id)
     {
         var flower = await _flower.GetByIdAsync(Id);

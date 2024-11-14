@@ -63,5 +63,13 @@ namespace prn231Flower.Repository.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderDetails)
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
+        }
     }
 }
