@@ -35,24 +35,11 @@ public class Authentication : ControllerBase
 
     private User AuthenticateUser(string EmailAddress, string Password)
     {
-        if (EmailAddress == "admin@gmail.com" && Password == "12345678")
-        {
-            var players = _user.GetAll();
-            foreach (var player in players)
-            {
-                if (player.Email == "admin@gmail.com" && player.Password == "12345678")
-                    return player;
-            }
-        }
+        var user = _user.GetAll().Where(u => u.Email.Equals(EmailAddress) 
+        && BCrypt.Net.BCrypt.Verify(Password, u.Password)).FirstOrDefault();
 
-        if (EmailAddress != "admin@gmail.com")
-        {
-            var listplayers = _user.GetAll();
-            var tempPlayer = listplayers.Where(p
-                => p.Email == EmailAddress && p.Password == Password).FirstOrDefault();
-            if (tempPlayer != null)
-                return tempPlayer;
-        }
+        if(user != null)
+            return user;
 
         return null;
     }

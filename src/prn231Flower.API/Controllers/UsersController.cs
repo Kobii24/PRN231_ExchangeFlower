@@ -1,21 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using prn231Flower.API.EmailServices;
+using prn231Flower.API.Helper;
 using prn231Flower.API.ViewModel;
 using prn231Flower.Data.Models;
 using prn231Flower.Repository.Repositories;
 
 namespace prn231Flower.API.Controllers;
 public record RegisterRequest(string Username, string Email, string Password,
+    string Phone, string Address);
+
+public record UpdateUserRequest(string Username, string Email, string Password,
     int Role, string Phone, string Address);
 
+[Authorize(Policy = "Admin")]
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
     private readonly UserRepository _user;
+    private readonly IEmailService _emailService;
+    private readonly FlowerRepository _flower;
+    private readonly OrderDetailRepository _orderDetail;
+    private readonly NotificationRepository _notificate;
 
-    public UsersController(UserRepository user)
+    public UsersController(UserRepository user, 
+        IEmailService emailService, FlowerRepository flower, OrderDetailRepository orderDetail, NotificationRepository notificate)
     {
         _user = user;
+        _emailService = emailService;
+        _flower = flower;
+        _orderDetail = orderDetail;
+        _notificate = notificate;
     }
 
     [HttpGet]
@@ -26,21 +43,40 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("({Id})")]
-    public async Task<ActionResult<UserVM>> GetUserById(int Id)
+    public async Task<ActionResult<User>> GetUserById([FromHeader]int Id)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
             return NotFound($"Can not find user with {Id}");
-        var vn = new UserVM
-        {
-            Address = user.Address,
-            Email = user.Email,
-            Phone = user.Phone,
-            Username = user.Username
-        };
-        return Ok(vn);
+
+        //var flowers = _flower.GetAll();
+        //var listFlower = new List<Flower>();
+        //foreach(var flower in flowers)
+        //{
+        //    if(flower.UserId == user.Id)
+        //    {
+        //        listFlower.Add(flower);
+        //    }
+        //}
+
+        //var vm = new UserVM();
+
+        //if (listFlower.Count == 0)
+        //{
+        //    return BadRequest("List flower is empty!");
+        //}
+        //else
+        //{
+        //    vm.Address = user.Address;
+        //    vm.Username = user.Username;
+        //    vm.Email = user.Email;
+        //    vm.Flowers = listFlower;
+        //}
+
+        return Ok(user);
     }
 
+    [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterUser([FromBody]RegisterRequest request)
     {
@@ -50,24 +86,35 @@ public class UsersController : ControllerBase
             Address = request.Address,
             Email = request.Email,
             Phone = request.Phone,
-            Password = request.Password,
-            Role = request.Role,
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Role = 1,
             CreatedAt = DateTime.Now
         };
-        _user.Create(newUser);
-        await _user.SaveAsync();
-        return Ok(newUser);
+        await _user.CreateAsync(newUser);
+        try
+        {
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.ToEmail = newUser.Email;
+            mailRequest.Subject = "Welcome to Exchange Flower system " + newUser.Username;
+            mailRequest.Body = "Register successfully! Welcome to Exchange Flower system " + newUser.Username;
+            await _emailService.SendEmailAsync(mailRequest);
+            return Ok("Go to email to confirm!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     [HttpPut("({Id})")]
-    public async Task<IActionResult> UpdateUser(int Id, [FromBody] RegisterRequest request)
+    public async Task<IActionResult> UpdateUser([FromHeader]int Id, [FromBody] UpdateUserRequest request)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
             return BadRequest($"Can not find User with {Id} to update!");
         user.Email = request.Email;
         user.Phone = request.Phone;
-        user.Password = request.Password;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
         user.Role = request.Role;
         user.Username = request.Username;
         user.Address = request.Address;
@@ -79,11 +126,52 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("({Id})")]
-    public async Task<IActionResult> DeleteUser(int Id)
+    public async Task<IActionResult> DeleteUser([FromHeader]int Id)
     {
         var user = await _user.GetByIdAsync(Id);
         if (user is null)
             return BadRequest($"Can not find User with {Id} to delete!");
+        var flowers = _flower.GetAll();
+        var listFlower = new List<Flower>();
+        foreach (var flower in flowers)
+        {
+            if(flower.UserId == user.Id)
+            {
+                listFlower.Add(flower);
+            }
+        }
+
+        foreach (var flower in listFlower)
+        {
+            foreach(var item in _orderDetail.GetAll())
+            {
+                if (item.FlowerId.Equals(flower.Id))
+                {
+                    _orderDetail.Remove(item);
+                    await _orderDetail.SaveAsync();
+                }
+
+            }
+        }
+
+        foreach(var flower in listFlower)
+        {
+            if (flower.Id.Equals(user.Id))
+            {
+                _flower.Remove(flower);
+                await _flower.SaveAsync();
+            }
+        }
+
+        foreach(var item in _notificate.GetAll())
+        {
+            if (item.Id.Equals(user.Id))
+            {
+                _notificate.Remove(item);
+                await _notificate.SaveAsync();
+            }
+        }
+
         _user.Remove(user);
         await _user.SaveAsync();
         return Ok("IsSuccess");
