@@ -87,5 +87,12 @@ namespace prn231Flower.Repository.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<Order>> GetOrdersBySellerIdAsync(int sellerId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderDetails)
+                .Where(o => o.OrderDetails.Any(od => _context.Flowers.Any(f => f.Id == od.FlowerId && f.UserId == sellerId)))
+                .ToListAsync();
+        }
     }
 }

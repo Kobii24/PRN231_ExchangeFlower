@@ -93,5 +93,18 @@ namespace prn231Flower.API.Controllers
 
             return Ok("Order status updated successfully.");
         }
+
+        [HttpGet("seller/{sellerId}")]
+        public async Task<IActionResult> GetOrdersBySellerId(int sellerId)
+        {
+            var orders = await _orderRepository.GetOrdersBySellerIdAsync(sellerId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound($"No orders found for seller with ID {sellerId}.");
+            }
+
+            return Ok(orders);
+        }
+
     }
 }
