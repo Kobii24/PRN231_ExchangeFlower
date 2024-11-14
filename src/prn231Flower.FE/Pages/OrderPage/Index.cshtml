@@ -1,0 +1,223 @@
+﻿@page
+@model prn231Flower.FE.Pages.OrderPage.IndexModel
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<h2>Order History</h2>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="text-danger">@Model.ErrorMessage</div>
+}
+else if (Model.Orders != null && Model.Orders.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Order Date</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.Name</td>
+                    <td>@order.Phone</td>
+                    <td>@Model.GetStatusText(order.Status ?? 0)</td>
+                    <td>@(order.CreatedAt.HasValue ? order.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm") : "N/A")</td>
+                    <td>@order.OrderDetails.FirstOrDefault()?.Description</td>
+                    <td>@order.OrderDetails.FirstOrDefault()?.Quantity</td>
+                    <td>$@order.OrderDetails.FirstOrDefault()?.TotalPrice</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewOrderDetail(@order.Id)">View Detail</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No orders found.</p>
+}
+
+<div id="orderDetailModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>
+            Order Detail
+        </h3>
+        <h3>***</h3>
+        <div id="orderDetailContent" class="order-detail-container">
+            <!-- Order details and flower image will be loaded here -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function viewOrderDetail(orderId) {
+            try {
+                const orderResponse = await fetch(`https://localhost:5050/api/order/${orderId}`);
+                if (!orderResponse.ok) {
+                    alert("Failed to load order details.");
+                    return;
+                }
+                const order = await orderResponse.json();
+
+                // Fetch flower image using flowerId from the order details
+                const flowerId = order.orderDetails[0]?.flowerId;
+                let flowerImageUrl = '';
+                if (flowerId) {
+                    const flowerResponse = await fetch(`https://localhost:5050/api/Flowers/${flowerId}`);
+                    if (flowerResponse.ok) {
+                        const flowerData = await flowerResponse.json();
+                        flowerImageUrl = flowerData.imgUrl || '';
+                    }
+                }
+
+                displayOrderDetails(order, flowerImageUrl);
+                document.getElementById("orderDetailModal").style.display = "block";
+            } catch (error) {
+                console.error("Error fetching order details:", error);
+            }
+        }
+
+        function displayOrderDetails(order, flowerImageUrl) {
+            let statusText = ["Pending", "Confirmed", "Completed", "Cancelled"][order.status] || "Unknown";
+            let orderItemsHtml = order.orderDetails.map(item => `
+                <div class="order-item">
+                    <p><strong>Flower ID:</strong> ${item.flowerId}</p>
+                    <p><strong>Quantity:</strong> ${item.quantity}</p>
+                    <p><strong>Description:</strong> ${item.description}</p>
+                    <p><strong>Total Price:</strong> $${item.totalPrice}</p>
+                </div>
+            `).join("");
+
+            let details = `
+                <div class="order-info">
+                    <p><strong>Name:</strong> ${order.name}</p>
+                    <p><strong>Email:</strong> ${order.email}</p>
+                    <p><strong>Phone:</strong> ${order.phone}</p>
+                    <p><strong>Address:</strong> ${order.address}</p>
+                    <p><strong>Status:</strong> ${statusText}</p>
+                    <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+                    <p>--------</p>
+                    <h4>Order Items:</h4>
+                    ${orderItemsHtml}
+                </div>
+                <div class="flower-image">
+                    <img src="${flowerImageUrl}" alt="Flower Image" />
+                </div>
+            `;
+            document.getElementById("orderDetailContent").innerHTML = details;
+        }
+
+        function closeModal() {
+            document.getElementById("orderDetailModal").style.display = "none";
+        }
+    </script>
+    <style>
+        /* Style for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .modal h3 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .order-detail-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .order-info {
+            flex: 1;
+            color: #444;
+        }
+
+        .flower-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .flower-image img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        .order-item {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+    </style>
+}
