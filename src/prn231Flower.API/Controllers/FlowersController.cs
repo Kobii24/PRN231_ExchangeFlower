@@ -21,7 +21,7 @@ public class FlowersController : ControllerBase
         _od = od;
     }
 
-    [Authorize("AdminAndSeller")]
+    [Authorize("AllRoles")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Flower>>> GetAllFlower()
     {
