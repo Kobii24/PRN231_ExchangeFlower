@@ -71,5 +71,21 @@ namespace prn231Flower.Repository.Repositories
                 .Where(o => o.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, int status)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            order.Status = status;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
     }
 }

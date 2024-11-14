@@ -14,5 +14,7 @@ namespace prn231Flower.Repository.Interfaces
         Task<Order> GetOrderByIdAsync(int id);
         Task<bool> DeleteOrderAsync(int orderId);
         Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);
+        Task<bool> UpdateOrderStatusAsync(int orderId, int status);
+        Task<IEnumerable<Order>> GetOrdersBySellerIdAsync(int sellerId);
     }
 }
