@@ -67,46 +67,31 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model.Flowers) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImgUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                @if (userRole.Equals("1") || userRole.Equals("3"))
-                {
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> |
-                }
+<tbody>
+        @foreach (var item in Model.Flowers)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                <td>@Html.DisplayFor(modelItem => item.ImgUrl)</td>
+                <td>@Html.DisplayFor(modelItem => item.User.Email)</td>
+                <td>
+                    @if (userRole.Equals("1") || userRole.Equals("3"))
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <span> | </span>
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                        <span> | </span>
+                    }
                     <a asp-page="/CheckoutPage/Index" asp-route-id="@item.Id">Buy now</a>
-            </td>       
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <nav aria-label="Page navigation">
