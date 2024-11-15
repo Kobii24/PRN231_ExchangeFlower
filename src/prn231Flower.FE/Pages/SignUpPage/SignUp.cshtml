@@ -6,62 +6,111 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>SignUp</title>
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+        }
+
+        .center-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 400px;
+            padding: 2em;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 1em;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 1em;
+        }
+
+        td {
+            padding: 0.5em 0;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.2em 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 0.6em;
+            font-size: 1em;
+            color: #fff;
+            background-color: #4a90e2;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1em;
+        }
+
+            input[type="submit"]:hover {
+                opacity: 0.9;
+            }
+
+        .error-message {
+            color: #ff4d4d;
+            margin-bottom: 1em;
+        }
+    </style>
 </head>
 <body>
-    <h3>
-        Sign Up
-    </h3>
-    @if (Model.ErrorMessage != null)
-    {
-        <div style="color: red;">@Model.ErrorMessage</div>
-    }
-    <form method="post" asp-page="signup">
-        <table>
-            <tr>
-                <td>UserName</td>
-                <td>
-                    <input asp-for="@Model.UserName" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Email
-                </td>
-                <td>
-                    <input asp-for="@Model.Email" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Password
-                </td>
-                <td>
-                    <input type="password" asp-for="@Model.Password" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Phone
-                </td>
-                <td>
-                    <input asp-for="@Model.Phone" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Address
-                </td>
-                <td>
-                    <input asp-for="@Model.Address" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input class="btn btn-primary" type="submit" value="Register" />
-                </td>
-            </tr>
-        </table>
-    </form>
+    <div class="center-wrapper">
+        <h3>Sign Up</h3>
+        @if (Model.ErrorMessage != null)
+        {
+            <div class="error-message">@Model.ErrorMessage</div>
+        }
+        <form method="post" asp-page="signup">
+            <table>
+                <tr>
+                    <td>UserName</td>
+                    <td><input asp-for="UserName" /></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input type="email" asp-for="Email" /></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="password" asp-for="Password" /></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><input type="tel" asp-for="Phone" /></td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td><input asp-for="Address" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" value="Register" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </body>
 </html>

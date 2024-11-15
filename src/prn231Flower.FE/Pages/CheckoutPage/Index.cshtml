@@ -24,12 +24,29 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         display: flex;
-        flex-direction: row;
         gap: 20px;
     }
 
-    .form-section, .flower-section {
+    .image-section {
         flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .details-section {
+        flex: 2;
+    }
+
+    .form-section, .flower-section {
+        margin-bottom: 20px;
     }
 
     .form-group {
@@ -56,23 +73,9 @@
     }
 
     .flower-details {
-        margin-top: 10px;
-        padding: 15px;
+        padding-top: 10px;
         border-top: 1px solid #eee;
     }
-
-    .flower-image {
-        display: flex;
-        justify-content: center;
-        margin-top: 15px;
-    }
-
-        .flower-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
 
     .btn-submit {
         display: inline-block;
@@ -98,54 +101,60 @@
     }
 </style>
 
-
 <div class="checkout-container">
-    <form method="post">
-        <input type="hidden" asp-for="FlowerId" />
-        <div class="form-section">
-            <h2>Shipping Information</h2>
-            <div class="form-group">
-                <label>Name:</label>
-                <input asp-for="Name" />
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <input asp-for="Email" />
-            </div>
-            <div class="form-group">
-                <label>Phone:</label>
-                <input asp-for="Phone" />
-            </div>
-            <div class="form-group">
-                <label>Address:</label>
-                <input asp-for="Address" />
-            </div>
-            <div class="form-group">
-                <label>Note:</label>
-                <textarea asp-for="Note"></textarea>
-            </div>
-        </div>
+    <!-- Flower Image Section -->
+    <div class="image-section">
+        <img src="@Model.Flower?.ImgUrl" alt="Flower Image" />
+    </div>
 
-        <!-- Flower Details Section -->
-        <div class="flower-section">
-            <h2>Flower Details</h2>
-            <div class="flower-details">
-                <p><strong>Flower Name:</strong> @Model.Flower?.Type</p>
-                <p><strong>Price:</strong> $@Model.Flower?.Price</p>
-                <p><strong>Description:</strong> @Model.Flower?.Description</p>
-                <p><strong>Available Quantity:</strong> @Model.Flower?.Quantity</p>
+    <!-- Details Section -->
+    <div class="details-section">
+        <form method="post">
+            <input type="hidden" asp-for="FlowerId" />
+
+            <!-- Shipping Information Section -->
+            <div class="form-section">
+                <h2>Shipping Information</h2>
                 <div class="form-group">
-                    <label>Select Quantity:</label>
-                    <input asp-for="SelectedQuantity" type="number" min="1" max="@Model.Flower?.Quantity" />
+                    <label>Name:</label>
+                    <input asp-for="Name" />
                 </div>
-                <div class="flower-image">
-                    <img src="@Model.Flower?.ImgUrl" alt="Flower Image" />
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input asp-for="Email" />
+                </div>
+                <div class="form-group">
+                    <label>Phone:</label>
+                    <input asp-for="Phone" />
+                </div>
+                <div class="form-group">
+                    <label>Address:</label>
+                    <input asp-for="Address" />
+                </div>
+                <div class="form-group">
+                    <label>Note:</label>
+                    <textarea asp-for="Note"></textarea>
+                </div>
+            </div>
+
+            <!-- Flower Details Section -->
+            <div class="flower-section">
+                <h2>Flower Details</h2>
+                <div class="flower-details">
+                    <p><strong>Flower Name:</strong> @Model.Flower?.Type</p>
+                    <p><strong>Price:</strong> $@Model.Flower?.Price</p>
+                    <p><strong>Description:</strong> @Model.Flower?.Description</p>
+                    <p><strong>Available Quantity:</strong> @Model.Flower?.Quantity</p>
+                    <div class="form-group">
+                        <label>Select Quantity:</label>
+                        <input asp-for="SelectedQuantity" type="number" min="1" max="@Model.Flower?.Quantity" />
+                    </div>
                 </div>
             </div>
 
             <button type="submit" class="btn-submit">Place Order</button>
-        </div>
-    </form> <!-- Kết thúc form ở đây -->
+        </form>
+    </div>
 </div>
 
 @if (Model.ErrorMessage != null)

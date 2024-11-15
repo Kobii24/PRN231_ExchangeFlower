@@ -22,7 +22,6 @@ namespace prn231Flower.FE.Pages.FlowerPage
         public EditModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -31,9 +30,7 @@ namespace prn231Flower.FE.Pages.FlowerPage
             var token = HttpContext.Session.GetString("JWTToken");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            client.DefaultRequestHeaders.Add("Id", id.ToString());
-
-            var response = await client.GetAsync($"https://localhost:5050/api/Flowers/({id})");
+            var response = await client.GetAsync($"https://localhost:5050/api/Flowers/{id}");
             if (response.IsSuccessStatusCode)
             {
                 Flower = await response.Content.ReadFromJsonAsync<Flower>();
@@ -64,9 +61,7 @@ namespace prn231Flower.FE.Pages.FlowerPage
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            client.DefaultRequestHeaders.Add("Id", Flower.Id.ToString());
-
-            var response = await client.PutAsJsonAsync($"https://localhost:5050/api/Flowers/({Flower.Id})", Flower);
+            var response = await client.PutAsJsonAsync($"https://localhost:5050/api/Flowers/{Flower.Id}", Flower);
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToPage("Index");
@@ -74,4 +69,5 @@ namespace prn231Flower.FE.Pages.FlowerPage
             return Page();
         }
     }
+
 }
