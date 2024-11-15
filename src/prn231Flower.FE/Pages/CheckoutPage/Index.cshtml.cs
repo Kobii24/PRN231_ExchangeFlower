@@ -142,7 +142,7 @@ namespace prn231Flower.FE.Pages.CheckoutPage
             if (response.IsSuccessStatusCode)
             {
                 // Chuyển hướng đến trang OrderPage sau khi tạo thành công
-                return RedirectToPage("/OrderPage");
+                return RedirectToPage("/OrderPage/Index");
             }
 
             ErrorMessage = "Failed to place order. Please try again.";
